@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f4f4;
+    color: #333;
+}
+
+nav {
+    position: relative; /* Faz o nav ser posicionado em relação ao header */
+    z-index: 2; /* Garante que o nav fique acima da sobreposição */
+    padding: 10px 20px; /* Adiciona espaço interno ao nav */
+}
+
+nav ul {
+    list-style: none;
+    display: flex; /* Exibe os itens do menu em linha */
+    justify-content: center; /* Centraliza os itens do menu */
+}
+
+nav ul li {
+    margin: 0 20px; /* Espaçamento entre os itens do menu */
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s; /* Transição suave para a cor do texto */
+}
+
+nav ul li a:hover {
+    color: #ffcc00; /* Cor de destaque ao passar o mouse */
+}
+
+header {
+    background: url('eu.jpg') no-repeat center center/cover; /* Substitua 'sua-imagem.jpg' pelo caminho da sua imagem */
+    color: white;
+    padding: 90px 20px;
+    text-align: center;
+}
+
+/* Efeito de sobreposição escura */
+header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1; /* Mantém a sobreposição atrás do conteúdo do header */
+}
+
+header .intro {
+    position: relative;
+    z-index: 2; /* Garante que o conteúdo do header fique acima da sobreposição */
+}
+
+.intro h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.intro h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Botão */
+.btn {
+    background-color: #6a11cb;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #4b08a1;
+    color: white;
+}
+
+/* Estilização das seções */
+section {
+    width: 90%; /* Definindo a largura das seções */
+    margin: 0 auto; /* Centralizando as seções */
+    padding: 40px 20px; /* Ajuste o padding conforme necessário */
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Estilização da div container */
+.container {
+    display: flex; /* Usando flexbox para alinhar as seções */
+    align-items: flex-start; /* Alinhando ao topo */
+    justify-content: space-between; /* Distribuindo espaço entre os itens */
+    width: 80%; /* Centralizando a div container */
+    margin: 20px auto; /* Centralizando a div container com margem superior e inferior */
+    flex-direction: row; /* Garante que as seções fiquem lado a lado */
+    flex-wrap: wrap; /* Permite que as seções se empilhem em telas menores */
+}
+
+.container-softskills {
+    width: 90%; /* Definindo a largura das seções */
+    margin: 0 auto; /* Centralizando as seções */
+    padding: 40px 20px; /* Ajuste o padding conforme necessário */
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilização dos projetos */
+.softskills {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex: 1 1 30%; /* Permite que os projetos se ajustem e ocupem 30% da largura do container */
+    margin: 10px; /* Margem entre os projetos */
+}
+
+/* Estilização do rodapé */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #6a11cb;
+    color: white;
+}
+/* Estilo do botão Entrar no canto superior direito */
+.btn-login {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btn-login:hover {
+    background-color: #ffcc00;
+    color: #333;
+}
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Alinha verticalmente em telas menores */
+    }
+
+    section {
+        max-width: 100%; /* Seções ocupam toda a largura */
+    }
+
+    .softskills {
+        flex: 1 1 100%; /* Projetos ocupam 100% da largura em telas menores */
+    }
+    .btn_login {
+        width: 100%;
+        background-color: #ffcc00;
+        align-items: center;
+    }
+    .btn-login{
+        right: 36%;
+        align-items: center;
+    }
+    ul{
+        margin-top: 40px;
+    }
+}
+
