@@ -1,4 +1,5 @@
 <?php
+//TESTEANDO SINCRONIZAÇÃO COM KINGHOST
 session_start();
 require_once 'auth.php'; // Importa a classe de autenticação
 
