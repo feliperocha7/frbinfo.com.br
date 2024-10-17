@@ -7,20 +7,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     $auth = new Auth();
-    
+
+    // Exibe a variável de sessão "produto" (para depuração)
     echo $_SESSION['produto'];
+
     if ($auth->login($username, $password)) {
-        if($_SESSION['produto'] == 0){
-            header("Location: painel.php");
+        // Redirecionamento com caminhos absolutos para evitar problemas com pastas diferentes
+        if ($_SESSION['produto'] == 0) {
+            header("Location: /painel.php"); // Caminho absoluto
             exit();
-        }else if($_SESSION['produto'] == 1){
-            header("Location: empsilva/dashboard.php");
+        } else if ($_SESSION['produto'] == 1) {
+            header("Location: /empsilva/dashboard.php"); // Caminho absoluto
             exit();
-        }  
+        }
     } else {
         echo "Usuário ou senha incorretos!";
     }
-}   
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -32,9 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="login-container">
-
-        <img src="img/logo.png" alt="Logo da FBI - Felipe Barros InformÃ¡tica" style="max-width: 100%; height: auto; margin-bottom: 20px;">
-        
+        <img src="img/logo.png" alt="Logo da FBI - Felipe Barros Informática" style="max-width: 100%; height: auto; margin-bottom: 20px;">
         <form action="login.php" method="POST" class="login-form">
             <center><h2>Login</h2></center>
             <input type="text" name="username" placeholder="Usuário" required>
