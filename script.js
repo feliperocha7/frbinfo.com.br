@@ -10,3 +10,4 @@ ScrollReveal().reveal('#projects', { delay: 400 });
 ScrollReveal().reveal('#contact', { delay: 600 });
 
 
+ 

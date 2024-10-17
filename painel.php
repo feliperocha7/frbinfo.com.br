@@ -15,7 +15,7 @@ require_once 'session_check.php';
 <body>
     <?php
         include 'navbar.php';
-    ?>
+    ?> 
 
     <div class="container mt-4">
         <div class="btn-painel">

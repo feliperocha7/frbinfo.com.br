@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'session_check.php'; // Certifique-se de que isso é necessário para sua aplicação
 require_once 'db.php'; // Inclua sua conexão com o banco de dados
 $database = new Database();

@@ -11,7 +11,7 @@
     z-index: 1000;
     box-sizing: border-box; /* Inclui padding no cálculo da largura */
 }
-
+ 
 .navbar-brand a {
     color: #fff;
     text-decoration: none;

@@ -1,4 +1,4 @@
-<?php
+<?php 
 class Database {
     private $host = "mysql.frbinfo.com.br"; // Nome do host
     private $db_name = "frbinfo"; // Nome do banco de dados

@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'db.php'; // Inclua sua classe de conexão com o banco de dados
 
 header('Content-Type: application/json');

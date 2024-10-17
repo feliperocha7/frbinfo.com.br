@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'db.php'; // Inclua sua conexão com o banco de dados
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -10,7 +10,7 @@ body {
     background: #f4f4f4;
     color: #333;
 }
-
+ 
 /* Cabeçalho com imagem de fundo */
 header {
     background: url('eu.jpg') no-repeat center center/cover;

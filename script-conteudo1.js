@@ -9,7 +9,7 @@ $(document).ready(function() {
         if (!nome || !caminho) {
             alert("Por favor, preencha todos os campos.");
             return;
-        }
+        } 
 
         // Fazer a requisição AJAX
         $.ajax({

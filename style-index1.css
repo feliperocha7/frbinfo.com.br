@@ -14,7 +14,7 @@ nav {
     position: relative; /* Faz o nav ser posicionado em relação ao header */
     z-index: 2; /* Garante que o nav fique acima da sobreposição */
     padding: 10px 20px; /* Adiciona espaço interno ao nav */
-}
+} 
 
 nav ul {
     list-style: none;
