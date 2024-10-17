@@ -1,29 +1,5 @@
 <?php
-session_start(); 
-require_once 'auth.php';
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $auth = new Auth();
-
-    // Exibe a variável de sessão "produto" (para depuração)
-    echo $_SESSION['produto'];
-
-    if ($auth->login($username, $password)) {
-        // Redirecionamento com caminhos absolutos para evitar problemas com pastas diferentes
-        if ($_SESSION['produto'] == 0) {
-            header("Location: /painel.php"); // Caminho absoluto
-            exit();
-        } else if ($_SESSION['produto'] == 1) {
-            header("Location: /empsilva/dashboard.php"); // Caminho absoluto
-            exit();
-        }
-    } else {
-        echo "Usuário ou senha incorretos!";
-    }
-}
+    require_once 'session_check.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
