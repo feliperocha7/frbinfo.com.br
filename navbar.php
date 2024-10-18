@@ -4,7 +4,7 @@
     </a>
     <div class="navbar-buttons">
         <button class="nav-btn" onclick="window.location.href='dashboard.php';">Painel</button>
-        <button class="nav-btn" onclick="window.location.href='bix/painel.php';">Bix</button>
+        <button class="nav-btn" onclick="window.location.href='andorinhas/painel.php';">Andorinhas</button>
         <button class="nav-btn" onclick="window.location.href='empsilva/dashboard.php';">Empsilva</button>
     </div>
     <div class="navbar-user">

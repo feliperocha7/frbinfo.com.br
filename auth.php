@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/db.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/frbinfo.com.br/db.php'; 
 
 class Auth {
     private $conn;
@@ -29,6 +29,7 @@ class Auth {
                     $_SESSION['perfil'] = $user['perfil'];
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['produto'] = $user['produto'];
+                    $_SESSION['loja'] = $user['loja'];
                     $_SESSION['session_id'] = session_id(); // Armazena o ID da sessão
                     $_SESSION['last_activity'] = time(); // Armazena o timestamp da última atividade
 
@@ -60,7 +61,7 @@ class Auth {
         // Verifica se a sessão está ativa
         if (!isset($_SESSION['user'])) {
             error_log("Sessão não definida.");
-            header("Location: ./login.php");
+            header("Location: /frbinfo.com.br/login.php");
             exit();
         }
 

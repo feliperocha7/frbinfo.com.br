@@ -8,7 +8,7 @@ session_set_cookie_params([
 session_start();
 
 // Inclui o arquivo de conexão com o banco de dados
-require_once $_SERVER['DOCUMENT_ROOT'] . '/db.php'; // Ajuste o caminho conforme necessário
+require_once $_SERVER['DOCUMENT_ROOT'] . '/frbinfo.com.br/db.php'; // Ajuste o caminho conforme necessário
 require_once 'auth.php'; // Inclui a classe Auth
 
 // Cria uma instância da classe Auth
