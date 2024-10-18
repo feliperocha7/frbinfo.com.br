@@ -1,17 +1,21 @@
 <?php
+// Inicia a sessão
 session_set_cookie_params([
-    'path' => '/',               // Garante que a sessão seja válida em todas as pastas
-    'httponly' => true,          // Protege contra XSS
-    'samesite' => 'Strict'       // Evita o uso da sessão em sites externos
+    'path' => '/',
+    'httponly' => true,
+    'samesite' => 'Strict'
 ]);
+session_start();
 
-session_start();  // Inicia a sessão com os parâmetros acima
+// Inclui o arquivo de conexão com o banco de dados
+require_once $_SERVER['DOCUMENT_ROOT'] . '/db.php'; // Ajuste o caminho conforme necessário
+require_once 'auth.php'; // Inclui a classe Auth
 
-require_once 'auth.php';  // Inclui a classe Auth
-$auth = new Auth();       // Cria uma instância da classe Auth
+// Cria uma instância da classe Auth
+$auth = new Auth();
 
+// Verifica a sessão
 if (!$auth->checkSession()) {
     error_log("Sessão inválida, redirecionando para login...");
 }
-
-require_once 'db.php';    // Inclui a classe Database aqui
+?>

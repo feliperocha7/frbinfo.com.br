@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/db.php'; 
 
 class Auth {
     private $conn;
