@@ -75,7 +75,7 @@ class Auth {
         // Verifica se a sessão está ativa
         if (!isset($_SESSION['user'])) {
             error_log("Sessão não definida.");
-            header("Location: /login.php"); // Caminho absoluto
+            header("Location: ./login.php"); // Caminho absoluto
             exit();
         }
     
@@ -112,7 +112,7 @@ class Auth {
         session_unset();
         session_destroy();
         session_regenerate_id(true);  // Gera um novo ID de sessão para segurança
-        header("Location: /index.php");  // Caminho absoluto
+        header("Location: ./index.php");  // Caminho absoluto
         exit();
     }
 }

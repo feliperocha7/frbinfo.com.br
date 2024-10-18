@@ -1,0 +1,334 @@
+[1mdiff --git a/atualizar_usuario.php b/atualizar_usuario.php[m
+[1mindex bc39dcd..f736fb9 100644[m
+[1m--- a/atualizar_usuario.php[m
+[1m+++ b/atualizar_usuario.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'session_check.php'; // Certifique-se de que isso é necessário para sua aplicação[m
+ require_once 'db.php'; // Inclua sua conexão com o banco de dados[m
+ $database = new Database();[m
+[1mdiff --git a/auth.php b/auth.php[m
+[1mindex 3eb053c..a2b542b 100644[m
+[1m--- a/auth.php[m
+[1m+++ b/auth.php[m
+[36m@@ -1,5 +1,5 @@[m
+ <?php[m
+[31m-require_once 'db.php'; [m
+[32m+[m[32mrequire_once 'db.php';[m
+ [m
+ class Auth {[m
+     private $conn;[m
+[36m@@ -23,18 +23,17 @@[m [mclass Auth {[m
+             if ($stmt->rowCount() == 1) {[m
+                 $user = $stmt->fetch(PDO::FETCH_ASSOC);[m
+ [m
+[32m+[m[32m                // Exibe os dados do usuário para depuração[m
+[32m+[m[32m                //var_dump($user);[m
+[32m+[m[32m                //echo password_hash("123", PASSWORD_BCRYPT) . "<br>";[m
+                 // Verifica se a senha fornecida corresponde ao hash armazenado[m
+                 if (password_verify($password, $user['senha'])) {[m
+[31m-[m
+[31m-                    // Desconectar a sessão anterior, se existir[m
+[32m+[m[32m                    // Verifica se o usuário já está logado[m
+                     if (!empty($user['session_id'])) {[m
+[31m-                        $updateQuery = "UPDATE usuarios SET session_id = NULL WHERE id = :user_id";[m
+[31m-                        $updateStmt = $this->conn->prepare($updateQuery);[m
+[31m-                        $updateStmt->bindParam(':user_id', $user['id']);[m
+[31m-                        $updateStmt->execute();[m
+[32m+[m[32m                        return false; // Usuário já está logado em outra sessão[m
+                     }[m
+ [m
+[31m-                    // Regenerar a sessão após o login bem-sucedido[m
+[32m+[m[32m                    // Regenerar a sessão[m
+                     session_regenerate_id(true);[m
+                     $_SESSION['user'] = $user['usuario'];[m
+                     $_SESSION['perfil'] = $user['perfil'];[m
+[36m@@ -67,23 +66,23 @@[m [mclass Auth {[m
+     public function checkSession() {[m
+         // Verifica se a sessão está ativa[m
+         if (!isset($_SESSION['user'])) {[m
+[31m-            header("Location: /login.php"); // Caminho absoluto[m
+[32m+[m[32m            header("Location: login.php");[m
+             exit();[m
+         }[m
+[31m-[m
+[32m+[m[41m    [m
+         // Verifica se o ID da sessão armazenado no banco de dados corresponde ao ID atual[m
+         $query = "SELECT session_id FROM usuarios WHERE id = :user_id";[m
+         $stmt = $this->conn->prepare($query);[m
+         $stmt->bindParam(':user_id', $_SESSION['user_id']);[m
+         $stmt->execute();[m
+         $user = $stmt->fetch(PDO::FETCH_ASSOC);[m
+[31m-[m
+[31m-        // Verifica se o ID da sessão corresponde[m
+[32m+[m[41m    [m
+[32m+[m[32m        // Verifica se o usuário foi encontrado e se o ID da sessão corresponde[m
+         if ($user === false || $user['session_id'] !== session_id()) {[m
+             $this->logout(); // Se o ID não corresponder, faz logout[m
+         }[m
+[31m-[m
+[31m-        return true;[m
+[32m+[m[41m    [m
+[32m+[m[32m        return true; // Retorna true se a sessão estiver ativa[m
+     }[m
+ [m
+     public function logout() {[m
+[36m@@ -95,8 +94,7 @@[m [mclass Auth {[m
+ [m
+         session_unset();[m
+         session_destroy();[m
+[31m-        session_regenerate_id(true);  // Gera um novo ID de sessão para segurança[m
+[31m-        header("Location: /index.php");  // Caminho absoluto[m
+[32m+[m[32m        header("Location: index.php");[m
+         exit();[m
+     }[m
+ }[m
+[1mdiff --git a/cadastrar_empresa.php b/cadastrar_empresa.php[m
+[1mindex fbfd668..98fd215 100644[m
+[1m--- a/cadastrar_empresa.php[m
+[1m+++ b/cadastrar_empresa.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'db.php'; // Inclua sua conexão com o banco de dados[m
+ [m
+ if ($_SERVER['REQUEST_METHOD'] == 'POST') {[m
+[1mdiff --git a/cadastrar_usuario.php b/cadastrar_usuario.php[m
+[1mindex 09a333a..dc6cef5 100644[m
+[1m--- a/cadastrar_usuario.php[m
+[1m+++ b/cadastrar_usuario.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'db.php'; // Inclua sua classe de conexão com o banco de dados[m
+ [m
+ header('Content-Type: application/json');[m
+[1mdiff --git a/consultar_empresas.php b/consultar_empresas.php[m
+[1mindex cd5b261..00ddc73 100644[m
+[1m--- a/consultar_empresas.php[m
+[1m+++ b/consultar_empresas.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'db.php';[m
+ [m
+ header('Content-Type: application/json');[m
+[1mdiff --git a/db.php b/db.php[m
+[1mindex 7aaef49..b9e36d6 100644[m
+[1m--- a/db.php[m
+[1m+++ b/db.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ class Database {[m
+     private $host = "mysql.frbinfo.com.br"; // Nome do host[m
+     private $db_name = "frbinfo"; // Nome do banco de dados[m
+[1mdiff --git a/index.php b/index.php[m
+[1mindex 242835d..a7ab991 100644[m
+[1m--- a/index.php[m
+[1m+++ b/index.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<!DOCTYPE html> [m
+[32m+[m[32m<!DOCTYPE html>[m
+ <html lang="pt-BR">[m
+ <head>[m
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;600&display=swap">[m
+[1mdiff --git a/listar_empresas.php b/listar_empresas.php[m
+[1mindex e251d3c..2690b84 100644[m
+[1m--- a/listar_empresas.php[m
+[1m+++ b/listar_empresas.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'db.php';[m
+ [m
+ header('Content-Type: application/json');[m
+[1mdiff --git a/listar_usuarios.php b/listar_usuarios.php[m
+[1mindex 58d6137..ab1d02f 100644[m
+[1m--- a/listar_usuarios.php[m
+[1m+++ b/listar_usuarios.php[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-<?php [m
+[32m+[m[32m<?php[m
+ require_once 'db.php';[m
+ [m
+ header('Content-Type: application/json');[m
+[1mdiff --git a/login.php b/login.php[m
+[1mindex 4f50264..0345092 100644[m
+[1m--- a/login.php[m
+[1m+++ b/login.php[m
+[36m@@ -1,5 +1,5 @@[m
+ <?php[m
+[31m-session_start(); [m
+[32m+[m[32msession_start();[m
+ require_once 'auth.php';[m
+ [m
+ if ($_SERVER['REQUEST_METHOD'] == 'POST') {[m
+[36m@@ -7,23 +7,20 @@[m [mif ($_SERVER['REQUEST_METHOD'] == 'POST') {[m
+     $password = $_POST['password'];[m
+ [m
+     $auth = new Auth();[m
+[31m-[m
+[31m-    // Exibe a variável de sessão "produto" (para depuração)[m
+[32m+[m[41m    [m
+     echo $_SESSION['produto'];[m
+[31m-[m
+     if ($auth->login($username, $password)) {[m
+[31m-        // Redirecionamento com caminhos absolutos para evitar problemas com pastas diferentes[m
+[31m-        if ($_SESSION['produto'] == 0) {[m
+[31m-            header("Location: /painel.php"); // Caminho absoluto[m
+[32m+[m[32m        if($_SESSION['produto'] == 0){[m
+[32m+[m[32m            header("Location: painel.php");[m
+             exit();[m
+[31m-        } else if ($_SESSION['produto'] == 1) {[m
+[31m-            header("Location: /empsilva/dashboard.php"); // Caminho absoluto[m
+[32m+[m[32m        }else if($_SESSION['produto'] == 1){[m
+[32m+[m[32m            header("Location: empsilva/dashboard.php");[m
+             exit();[m
+[31m-        }[m
+[32m+[m[32m        }[m[41m  [m
+     } else {[m
+         echo "Usuário ou senha incorretos!";[m
+     }[m
+[31m-}[m
+[32m+[m[32m}[m[41m   [m
+ ?>[m
+ <!DOCTYPE html>[m
+ <html lang="pt-BR">[m
+[36m@@ -35,7 +32,9 @@[m [mif ($_SERVER['REQUEST_METHOD'] == 'POST') {[m
+ </head>[m
+ <body>[m
+     <div class="login-container">[m
+[31m-        <img src="img/logo.png" alt="Logo da FBI - Felipe Barros Informática" style="max-width: 100%; height: auto; margin-bottom: 20px;">[m
+[32m+[m
+[32m+[m[32m        <img src="img/logo.png" alt="Logo da FBI - Felipe Barros InformÃ¡tica" style="max-width: 100%; height: auto; margin-bottom: 20px;">[m
+[32m+[m[41m        [m
+         <form action="login.php" method="POST" class="login-form">[m
+             <center><h2>Login</h2></center>[m
+             <input type="text" name="username" placeholder="Usuário" required>[m
+[1mdiff --git a/navbar.php b/navbar.php[m
+[1mindex 6e39039..47a9d08 100644[m
+[1m--- a/navbar.php[m
+[1m+++ b/navbar.php[m
+[36m@@ -13,4 +13,4 @@[m
+         <a href="logout.php" class="btn-logout">Sair</a>[m
+     </div>[m
+ </nav>[m
+[31m- [m
+[32m+[m
+[1mdiff --git a/painel.php b/painel.php[m
+[1mindex ae39fc0..0efb010 100644[m
+[1m--- a/painel.php[m
+[1m+++ b/painel.php[m
+[36m@@ -15,7 +15,7 @@[m [mrequire_once 'session_check.php';[m
+ <body>[m
+     <?php[m
+         include 'navbar.php';[m
+[31m-    ?> [m
+[32m+[m[32m    ?>[m
+ [m
+     <div class="container mt-4">[m
+         <div class="btn-painel">[m
+[1mdiff --git a/script-conteudo1.js b/script-conteudo1.js[m
+[1mindex 982c522..90c8213 100644[m
+[1m--- a/script-conteudo1.js[m
+[1m+++ b/script-conteudo1.js[m
+[36m@@ -9,7 +9,7 @@[m [m$(document).ready(function() {[m
+         if (!nome || !caminho) {[m
+             alert("Por favor, preencha todos os campos.");[m
+             return;[m
+[31m-        } [m
+[32m+[m[32m        }[m
+ [m
+         // Fazer a requisição AJAX[m
+         $.ajax({[m
+[1mdiff --git a/script.js b/script.js[m
+[1mindex f43c954..f33e61e 100644[m
+[1m--- a/script.js[m
+[1m+++ b/script.js[m
+[36m@@ -10,4 +10,3 @@[m [mScrollReveal().reveal('#projects', { delay: 400 });[m
+ ScrollReveal().reveal('#contact', { delay: 600 });[m
+ [m
+ [m
+[31m- [m
+\ No newline at end of file[m
+[1mdiff --git a/session_check.php b/session_check.php[m
+[1mindex db62e9c..b81d571 100644[m
+[1m--- a/session_check.php[m
+[1m+++ b/session_check.php[m
+[36m@@ -1,14 +1,10 @@[m
+ <?php[m
+[31m-session_set_cookie_params([[m
+[31m-    'path' => '/',               // Garante que a sessão seja válida em todas as pastas[m
+[31m-    'httponly' => true,          // Protege contra XSS[m
+[31m-    'samesite' => 'Strict'       // Evita o uso da sessão em sites externos[m
+[31m-]);[m
+[32m+[m[32msession_start(); // Inicia a sessão[m
+ [m
+[31m-session_start();  // Inicia a sessão com os parâmetros acima[m
+ [m
+[31m-require_once 'auth.php';  // Inclui a classe Auth[m
+[31m-$auth = new Auth();       // Cria uma instância da classe Auth[m
+[31m-$auth->checkSession();    // Verifica se a sessão está ativa[m
+[31m-require_once 'db.php';    // Inclui a classe Database aqui[m
+[31m- [m
+\ No newline at end of file[m
+[32m+[m[32mrequire_once 'auth.php'; // Inclui a classe Auth[m
+[32m+[m[32m$auth = new Auth(); // Cria uma instância da classe Auth[m
+[32m+[m[32m$auth->checkSession(); // Verifica se a sessão está ativa[m
+[32m+[m[32mrequire_once 'db.php'; // Inclui a classe Database aqui[m
+[32m+[m
+[32m+[m[32m?>[m
+[1mdiff --git a/style-index1.css b/style-index1.css[m
+[1mindex a9ba24a..561b477 100644[m
+[1m--- a/style-index1.css[m
+[1m+++ b/style-index1.css[m
+[36m@@ -14,7 +14,7 @@[m [mnav {[m
+     position: relative; /* Faz o nav ser posicionado em relação ao header */[m
+     z-index: 2; /* Garante que o nav fique acima da sobreposição */[m
+     padding: 10px 20px; /* Adiciona espaço interno ao nav */[m
+[31m-} [m
+[32m+[m[32m}[m
+ [m
+ nav ul {[m
+     list-style: none;[m
+[1mdiff --git a/style-login.css b/style-login.css[m
+[1mindex 73fd234..04e144e 100644[m
+[1m--- a/style-login.css[m
+[1m+++ b/style-login.css[m
+[36m@@ -12,7 +12,7 @@[m [mbody {[m
+     font-family: Arial, sans-serif;[m
+     background-color: #f5f5f5;[m
+ }[m
+[31m- [m
+[32m+[m
+ .login-container {[m
+     display: flex;[m
+     flex-direction: column;[m
+[1mdiff --git a/styles.css b/styles.css[m
+[1mindex 589cbcd..25c10c8 100644[m
+[1m--- a/styles.css[m
+[1m+++ b/styles.css[m
+[36m@@ -11,7 +11,7 @@[m
+     z-index: 1000;[m
+     box-sizing: border-box; /* Inclui padding no cálculo da largura */[m
+ }[m
+[31m- [m
+[32m+[m
+ .navbar-brand a {[m
+     color: #fff;[m
+     text-decoration: none;[m
+[1mdiff --git a/teste.css b/teste.css[m
+[1mindex 351ea55..85c0fff 100644[m
+[1m--- a/teste.css[m
+[1m+++ b/teste.css[m
+[36m@@ -10,7 +10,7 @@[m [mbody {[m
+     background: #f4f4f4;[m
+     color: #333;[m
+ }[m
+[31m- [m
+[32m+[m
+ /* Cabeçalho com imagem de fundo */[m
+ header {[m
+     background: url('eu.jpg') no-repeat center center/cover;[m

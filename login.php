@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($auth->login($username, $password)) {
         // Verifica o valor da variável de sessão 'produto' para redirecionar o usuário corretamente
         if ($_SESSION['produto'] == 0) {
-            header("Location: /painel.php"); // Redireciona para o painel geral
+            header("Location: ./painel.php"); // Redireciona para o painel geral
             exit();
         } elseif ($_SESSION['produto'] == 1) {
-            header("Location: /empsilva/dashboard.php"); // Redireciona para o painel específico
+            header("Location: ./empsilva/dashboard.php"); // Redireciona para o painel específico
             exit();
         }
     } else {
