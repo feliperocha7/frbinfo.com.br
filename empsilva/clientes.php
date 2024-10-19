@@ -2,6 +2,10 @@
 require_once '../session_check.php';
 require_once 'db.php';
 
+if($_SESSION['produto'] !== 1 || $_SESSION['produto'] !== 0){
+    header('Location: ../valida_produto.php');
+}
+
 // Conexão com o banco de dados
 $database = new DatabaseEmpSilva();
 $conn = $database->getConnection();

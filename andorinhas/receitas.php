@@ -1,5 +1,10 @@
 <?php
 require_once '../session_check.php';
+
+if($_SESSION['perfil'] == 'operador'){
+    header('Location: /frbinfo.com.br/andorinhas/caixas.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

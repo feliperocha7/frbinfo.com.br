@@ -1,5 +1,12 @@
 <?php
 require_once '../session_check.php';
+
+if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
+    header('Location: ../valida_produto.php');
+}else if($_SESSION['perfil'] == 'operador'){
+    header('Location: /frbinfo.com.br/andorinhas/caixas.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

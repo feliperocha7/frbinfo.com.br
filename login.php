@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header("Location: ./empsilva/dashboard.php"); // Redireciona para o painel específico
             exit();
         } elseif ($_SESSION['produto'] == 2) {
-            header("Location: ./bix/painel.php"); // Redireciona para o painel específico
+            header("Location: ./andorinhas/painel.php"); // Redireciona para o painel específico
             exit();
         }
     } else {

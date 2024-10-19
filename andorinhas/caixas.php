@@ -2,6 +2,40 @@
 require_once '../session_check.php'; // Certifique-se de que o caminho está correto
 require_once 'db.php'; // Para a conexão com o banco de dados
 
+if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
+    header('Location: ../valida_produto.php');
+}else{
+    if($_SESSION['produto'] == 2){
+        switch($_SESSION['loja']) {
+            case 1:
+                $nomeLoja = 'MATRIZ';
+                break;
+            case 2:
+                $nomeLoja = 'AGENOR DE CAMPOS';
+                break;
+            case 3:
+                $nomeLojaloja = 'BELAS ARTES';
+                break;
+            case 4:
+                $nomeLoja = 'FAZENDEIRO';
+                break;
+            case 5:
+                $nomeLoja = 'MARINA';
+                break;
+            case 7:
+                $nomeLoja = 'GAIVOTA';
+                break;
+            case 8:
+                $nomeLoja = 'CENTRO DE MONGAGUÁ';
+                break;
+        }
+    }else{
+        $nomeLoja = "";
+    }
+}
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Dados do formulário
     $loja = $_SESSION['loja'];
@@ -66,6 +100,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border: 3px solid;
             position: relative;
         }
+        .a{
+            text-align: right;
+        }
+        .b{
+            font-weight: bold;
+        }
         tr, th, td {
             border: 1px solid black;
             position: relative;
@@ -98,14 +138,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .btn {
             width: 150px;
             border-radius: 20px;
+            border: 2px solid #007BFF;
+            color: #007BFF;
         }
         .add-btn {
             position: absolute;
             right: -20px; /* Ajuste para que fique flutuando dentro e fora */
-            top: 50%; /* Centraliza verticalmente */
+            top: 55%; /* Centraliza verticalmente */
             transform: translateY(-50%); /* Ajusta para ficar no centro */
-            width: 40px; /* Largura do botão */
-            height: 40px; /* Altura do botão */
+            width: 30px; /* Largura do botão */
+            height: 30px; /* Altura do botão */
             border-radius: 50%; /* Botão redondo */
             background-color: #007BFF; /* Cor de fundo */
             color: white; /* Cor do texto */
@@ -141,81 +183,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form method="post">
                 <table id="despesasTable">
                     <tr>
-                        <th class="col1">Caixa</th>
+                        <th class="col1 b"><center>CAIXA "<?php echo $nomeLoja; ?>"</center></th>
                         <td class="col2"><input class="invisivel" type="text" name="caixa"  value="1" required></td>
                     </tr>
                     <tr>
-                        <th class="col1">Despesa:</th>
-                        <th class="col2"></th>
+                        <th colspan="2" class="col1 b"><center>DESPESAS:</center></th>
                     </tr>
                     <tr>
                         <td class="col1"><input class="invisivel" type="text" value="" name="descricao[]" ></td>
                         <td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" value="0"name="valor[]" >
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" value="0"name="valor[]" >
                             <button class="add-btn" id="addButton" title="Adicionar nova despesa" type="button" onclick="addDespesa(event)">+</button>
                         </td>
                     </tr>
                     <tr>
-                        <th class="th col1">Abertura:</th>
-                        <td class="col2"><input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="abertura" required></td>
+                        <th class="th col1 b">ABERTURA:</th>
+                        <td class="col2"><input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="abertura" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Dinheiro:</td>
-                        <td class="col2"><input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="dinheiro" value="0" required></td>
+                        <td class="col2"><input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="dinheiro" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Débito:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="debito" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="debito" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Crédito:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="credito" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="credito" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Cheque:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="cheque" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="cheque" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Pix CNPJ:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="deposito" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="deposito" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Crediário:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="crediario" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="crediario" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Sispumi:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="sispumi" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="sispumi" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Grêmio:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="gremio" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="gremio" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Seicon:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="seicon" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="seicon" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Moeda Local:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="moeda_local" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="moeda_local" value="0" required></td>
                     </tr>
                     <tr>
                         <td class="col1">Pix:</td><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="pix" value="0" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="pix" value="0" required></td>
                     </tr>
                     <tr>
                         <th class="th col1">Troco:</th><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="troco" required></td>
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="troco" required></td>
                     </tr>
                     <tr>
-                        <th class="col1">Total do dia:</th><td class="col2">
-                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="0.00" name="total_dia" required></td>
+                        <th class="col1 b">TOTAL DO DIA:</th><td class="col2">
+                            <input class="invisivel" type="number" step="0.01" min="0" placeholder="R$ 0.00" name="total_dia" required></td>
                     </tr>
                     <tr>
-                        <td class="col1">Operador:</td><td><input class="invisivel" type="text" name="operador" required></td>
+                        <td class="col1 b">OPERADOR:</td><td><input class="invisivel" type="text" name="operador" required></td>
                     </tr>
                     <tr>
-                        <td class="col1" colspan="2"><input class="btn" type="submit" value="Enviar"></td>
+                        <td class="col1 a" colspan="2"><input class="btn" type="submit" value="Enviar"></td>
                     </tr>
                 </table>
             </form>

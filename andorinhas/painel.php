@@ -1,5 +1,10 @@
 <?php
 require_once '../session_check.php';
+
+if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
+    header('Location: ../valida_produto.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
