@@ -1,9 +1,9 @@
 <nav class="navbar">
-    <a href="dashboard.php" class="navbar-logo">
+    <a href="painel.php" class="navbar-logo">
         <img src="img/logo4P-navbar60px.png" alt="FBI - Felipe Barros Informática Logo" class="navbar-logo-img">
     </a>
     <div class="navbar-buttons">
-        <button class="nav-btn" onclick="window.location.href='dashboard.php';">Painel</button>
+        <button class="nav-btn" onclick="window.location.href='painel.php';">Painel</button>
         <button class="nav-btn" onclick="window.location.href='clientes.php';">Clientes</button>
         <button class="nav-btn" onclick="window.location.href='emprestimos.php';">Empréstimos</button>
     </div>

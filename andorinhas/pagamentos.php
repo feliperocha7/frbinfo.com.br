@@ -1,12 +1,19 @@
 <?php
 require_once '../session_check.php';
+require_once 'db.php';
 
-if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
+if($_SESSION['produto'] !== 2 && $_SESSION['produto'] !== 0){
     header('Location: ../valida_produto.php');
 }else if($_SESSION['perfil'] == 'operador'){
     header('Location: /frbinfo.com.br/andorinhas/caixas.php');
 }
 
+$database = new DatabaseAndorinhas();
+$conn = $database->getConnection();
+
+$sql = "SELECT dia, cfc, cd, descricao, comp, valor, local_pgto, cp, pgto FROM pagamentos";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,14 +21,151 @@ if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <?php include '../bootstrap.php'; ?>
+    <style>
+        .table {
+            border-radius: 0.5rem; /* Ajuste o valor conforme necessário */
+            overflow: hidden; /* Para garantir que as bordas arredondadas sejam aplicadas */
+            text-align: center;
+            align-items: center;
+        }
+        .table th, .table tr{
+            padding: 0.3rem;
+        }
+        tr:hover{
+            background-color: #f8f9fa;
+        }
+        .linha-pagamento-nao-realizado {
+            background-color: #f8d7da; /* Cor de fundo para pagamento não realizado */
+        }
+        .linha-pagamento-nao-realizado:hover {
+            background-color: #f8d7eb; /* Cor de fundo para pagamento não realizado */
+        }
+        .linha-pagamento-realizado {
+            background-color: #d4edda; /* Cor de fundo para pagamento realizado */
+        }
+        .f{
+            height: 1.3rem;
+        }
+    </style>
     <title>Meus Pagamentos</title>
 </head>
 <body>
     <?php
         include 'navbar.php';
     ?>
-    <h1>Meus Pagamentos</h1>
+    <div class="container shadow-lg p-3 mb-5 bg-body rounded">
+        <div class="form-pagamentos">
+        <h2 class="mb-4">Formulário de Pagamento</h2>
+
+        <form action="processa_formulario.php" method="POST">
+            <table class="table  table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Dia</th>
+                        <th scope="col">CFC</th>
+                        <th scope="col">CD</th>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Comp</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Local Pgto</th>
+                        <th scope="col">CP</th>
+                        <th scope="col">Pago</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="number" class="form-control" id="dia" min="1" max="31" name="dia" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="number" class="form-control" id="cfc" name="cfc" max="999" min="0" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="number" class="form-control" id="cd" name="cd" max="999" min="0" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-20 f">
+                                <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Ex.: Fornecedor" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-20 f">
+                                <input type="number" class="form-control" id="comp" name="comp" max="12" min="1" required>
+                            </div>
+                        </td>
+                        <td>
+                            <!-- <div>
+                                <input type="text" class="form-control" id="valor" name="valor" placeholder="R$ 0,00" step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" required>
+                            </div> -->
+                            <div class="input-group mb-3 f">
+                                <span class="input-group-text">R$</span>
+                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" id="valor" name="valor" required>
+                                <span class="input-group-text">.00</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="text" class="form-control" id="local_pgto" name="local_pgto" placeholder="Ex.: Itaú" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="number" class="form-control" id="cp" name="cp" max="999" min="0" required>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="checkbox" id="pgto" name="pgto">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col-15 f">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Salvar">
+                            </div>
+                        </td>
+                    </tr>
+                </form>     
+                </div>
+                <div class="tabela-pagamentos">
+                    <?php
+                        if ($stmt->rowCount() > 0) {
+                            // Saída dos dados de cada linha
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $classe = $row['pgto'] == "0" ? 'linha-pagamento-nao-realizado' : 'linha-pagamento-realizado';
+                                echo "<tr class='$classe'>";
+                                echo "<td>" . htmlspecialchars($row['dia']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['cfc']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['cd']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['comp']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['valor']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['local_pgto']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['cp']) . "</td>";
+                                echo "<td>" . ($row['pgto'] ? 'Sim' : 'Não') . "</td>"; // Exibe 'Sim' ou 'Não' para o checkbox
+                                echo '<td>
+                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+                                            <button type="button" class="btn btn-danger">Excluir</button>
+                                            <button type="button" class="btn btn-success">Editar</button>
+                                        </div>
+                                      </td>';
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='10'>Nenhum pagamento encontrado.</td></tr>";
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </body>
 </html>

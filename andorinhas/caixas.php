@@ -2,11 +2,15 @@
 require_once '../session_check.php'; // Certifique-se de que o caminho está correto
 require_once 'db.php'; // Para a conexão com o banco de dados
 
-if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
+$produto = $_SESSION['produto'];
+
+if($produto == 1){
     header('Location: ../valida_produto.php');
 }else{
-    if($_SESSION['produto'] == 2){
         switch($_SESSION['loja']) {
+            case 0:
+                $nomeLoja = 'Todas';
+                break;
             case 1:
                 $nomeLoja = 'MATRIZ';
                 break;
@@ -28,9 +32,6 @@ if($_SESSION['produto'] !== 2 || $_SESSION['produto'] !== 0){
             case 8:
                 $nomeLoja = 'CENTRO DE MONGAGUÁ';
                 break;
-        }
-    }else{
-        $nomeLoja = "";
     }
 }
 
@@ -90,8 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <?php include '../bootstrap.php'; ?>
     <title>Caixas</title>
     <style>
         /* Seu CSS aqui */
