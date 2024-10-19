@@ -11,7 +11,7 @@ if($_SESSION['produto'] !== 2 && $_SESSION['produto'] !== 0){
 $database = new DatabaseAndorinhas();
 $conn = $database->getConnection();
 
-$sql = "SELECT dia, descricao, valor, banco, cod FROM receitas";
+$sql = "SELECT dia, comp, descricao, valor, banco, cod FROM receitas";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 ?>
@@ -49,11 +49,12 @@ $stmt->execute();
         <div class="form-pagamentos">
         <h2 class="mb-4">Formulário de Receitas</h2>
 
-        <form action="processa_formulario-receitas.php" method="POST">
+        <form action="processa_formulario_receitas.php" method="POST">
             <table class="table  table-bordered">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Dia</th>
+                        <th scope="col">Comp.</th>
                         <th scope="col">Descrição</th>
                         <th scope="col">Valor</th>
                         <th scope="col">Banco</th>
@@ -69,14 +70,16 @@ $stmt->execute();
                             </div>
                         </td>
                         <td>
+                            <div class="col-15 f">
+                                <input type="number" class="form-control" id="comp" min="1" max="12" name="comp" required>
+                            </div>
+                        </td>
+                        <td>
                             <div class="col-20 f">
                                 <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Ex.: Fornecedor" required>
                             </div>
                         </td>
                         <td>
-                            <!-- <div>
-                                <input type="text" class="form-control" id="valor" name="valor" placeholder="R$ 0,00" step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" required>
-                            </div> -->
                             <div class="input-group mb-3 f">
                                 <span class="input-group-text">R$</span>
                                 <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" id="valor" name="valor" required>
@@ -108,8 +111,9 @@ $stmt->execute();
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 echo "<tr'>";
                                 echo "<td>" . htmlspecialchars($row['dia']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['comp']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['valor']) . "</td>";
+                                echo "<td>R$" . htmlspecialchars($row['valor']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['banco']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['cod']) . "</td>";
                                 echo '<td>

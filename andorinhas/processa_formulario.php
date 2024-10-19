@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $local_pgto = $_POST['local_pgto'];
     $cp = $_POST['cp'];
     $pgto = isset($_POST['pgto']) ? 1 : 0; // 1 para sim, 0 para não
+    $valor = str_replace(',', '.', $valor); // Converte vírgulas em pontos, se necessário
 
     // Verifica se as variáveis de sessão estão setadas
     if (!isset($_SESSION['loja']) || !isset($_SESSION['user_id'])) {

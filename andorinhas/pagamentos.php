@@ -102,13 +102,9 @@ $stmt->execute();
                             </div>
                         </td>
                         <td>
-                            <!-- <div>
-                                <input type="text" class="form-control" id="valor" name="valor" placeholder="R$ 0,00" step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" required>
-                            </div> -->
                             <div class="input-group mb-3 f">
                                 <span class="input-group-text">R$</span>
                                 <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" id="valor" name="valor" required>
-                                <span class="input-group-text">.00</span>
                             </div>
                         </td>
                         <td>
@@ -146,7 +142,7 @@ $stmt->execute();
                                 echo "<td>" . htmlspecialchars($row['cd']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['comp']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['valor']) . "</td>";
+                                echo "<td>R$" . htmlspecialchars($row['valor']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['local_pgto']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['cp']) . "</td>";
                                 echo "<td>" . ($row['pgto'] ? 'Sim' : 'Não') . "</td>"; // Exibe 'Sim' ou 'Não' para o checkbox
