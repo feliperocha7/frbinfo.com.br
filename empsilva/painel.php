@@ -17,6 +17,9 @@ if($_SESSION['produto'] !== 1 && $_SESSION['produto'] !== 0){
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    
+    <div class="container shadow-lg p-3 mb-5 bg-body rounded">
+        
+    </div>
+    <?php include '../bootstrap_js.php'; ?>
 </body>
 </html>

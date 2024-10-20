@@ -59,42 +59,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.saveNewClient = saveNewClient;
 
-    //variavel de controle de edição de cliente
-    let controleEditClient = false;
     //FUNÇÃO PARA HABILITAR CAMPOS DE FORMULARIO DE CLIENTES
+    let controleEditClient = false; // Variável global para controlar o estado de edição
+
     function enableEditClient(clientId) {
-        
         const fields = [
             "edit-client-name",
             "edit-client-cpf",
             "edit-client-document",
-            "edit-client-residence",
-            "edit-client-indicator"
+            "edit-client-residence"
         ];
-        //if(controleEditClient){
-            fields.forEach(field => {
-                const input = document.getElementById(`${field}${clientId}`);
-                if (input) {
-                    input.disabled = false; // Habilita o campo
-                    //controleEditClient = true;
-                }
-            });
-        //}else{
-            fields.forEach(field => {
-                const input = document.getElementById(`${field}${clientId}`);
-                if (input) {
-                    input.disabled = true; // Habilita o campo
-                    //controleEditClient = false;
-                }
-            });
-        //}
-        
+
+        // Inverte o estado de edição
+        controleEditClient = !controleEditClient; 
+
+        fields.forEach(field => {
+            const input = document.getElementById(`${field}${clientId}`);
+            if (input) {
+                input.disabled = !controleEditClient; // Habilita ou desabilita o campo baseado no estado de controle
+            }
+        });
     }
     window.enableEditClient = enableEditClient;  // Adicionando enableEdit
 
     //FUNÇÃO PARA SALVAR EDIÇÃO DE CLIENTES, SÓ FUNCIONA SE A EDIÇÃO ESTIVER LIBERADA
     function saveClient(clientId) {
-        //if(controleEditClient){
+        if(controleEditClient){
             const clientName = document.getElementById(`edit-client-name${clientId}`).value;
             const clientCpf = document.getElementById(`edit-client-cpf${clientId}`).value;
             const clientIndicator = document.getElementById(`edit-client-indicator${clientId}`).value;
@@ -133,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("Erro ao editar o cliente: " + data.message);
                 }
             });
-        //}else{
-            //alert("Edição desabilitada!")
-        //}
+        }else{
+            alert("Edição desabilitada!")
+        }
         
     }
     window.saveClient = saveClient;    // Adicionando saveClient
@@ -255,19 +245,20 @@ document.addEventListener("DOMContentLoaded", function () {
     //PREENCHE MODAL DAS PARCELAS
     function showInstallments(loanId, qtdParcelas) {
         const totalParcelas = qtdParcelas;
+        console.log('Fetching installments for loan ID:', loanId); // Debug
         $.ajax({
             url: 'getInstallments.php',
             type: 'POST',
             data: { loanId: loanId },
             success: function(response) {
+                console.log('AJAX response:', response); // Debug
                 try {
                     const data = JSON.parse(response);
                     let installmentsHtml = '<table class="table"><thead><tr><th>Parcela</th><th>Valor</th><th>Juros</th><th>Total com Juros</th><th>Vencimento</th><th>Status</th></tr></thead><tbody>';
-                    
                     data.forEach(installment => {
                         const installmentValue = parseFloat(installment.valor);
                         const installmentNumber = installment.numero_parcela;
-                        const juros = ((installmentValue * qtdParcelas)-(installmentValue * (installmentNumber - 1))) * 0.15;
+                        const juros = ((installmentValue * totalParcelas)-(installmentValue * (installmentNumber - 1))) * 0.15;
                         const comJuros = installmentValue + juros;
                         installmentsHtml += `<tr>
                             <td>Parcela ${installmentNumber}</td>
@@ -281,23 +272,22 @@ document.addEventListener("DOMContentLoaded", function () {
                             </td>
                         </tr>`;
                     });
-    
                     installmentsHtml += '</tbody></table>';
-                    installmentsHtml += '<button class="btn btn-primary" onclick="savePayments(';
-                    installmentsHtml += loanId + ')">Salvar</button>';
+                    installmentsHtml += '<button class="btn btn-primary" onclick="savePayments(' + loanId + ')">Salvar</button>';
                     $('#installmentsTableContainer').html(installmentsHtml);
                     $('#installmentsModal').modal('show');
-    
                 } catch (error) {
                     console.error('Erro ao processar os dados:', error);
                     alert('Erro ao carregar as parcelas.');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', error);
                 alert('Erro ao carregar as parcelas.');
             }
         });
     }
+    
     window.showInstallments = showInstallments;
 
     //Function para pagar parcelas

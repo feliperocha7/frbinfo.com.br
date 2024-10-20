@@ -11,9 +11,8 @@ require_once '../session_check.php';
     <title>Uploads</title>
 </head>
 <body>
-    <?php
-        include 'navbar.php';
-    ?>
+    <?php include 'navbar.php'; ?>
     <h1>Uploads</h1>
+    <?php include '../bootstrap_js.php'; ?>
 </body>
 </html>

@@ -16,10 +16,9 @@ if($_SESSION['produto'] !== 2 && $_SESSION['produto'] !== 0){
     <title>Painel Bix</title>
 </head>
 <body>
-    <?php
-        include 'navbar.php';
-    ?>
+    <?php include 'navbar.php'; ?>
     
+    <?php include '../bootstrap_js.php'; ?>
 </body>
 </html>
 

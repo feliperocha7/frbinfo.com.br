@@ -11,7 +11,7 @@ if($_SESSION['produto'] !== 2 && $_SESSION['produto'] !== 0){
 $database = new DatabaseAndorinhas();
 $conn = $database->getConnection();
 
-$sql = "SELECT dia, cfc, cd, descricao, comp, valor, local_pgto, cp, pgto FROM pagamentos";
+$sql = "SELECT id, dia, cfc, cd, descricao, comp, valor, local_pgto, cp, pgto FROM pagamentos";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 ?>
@@ -54,12 +54,12 @@ $stmt->execute();
     <?php
         include 'navbar.php';
     ?>
-    <div class="container shadow-lg p-3 mb-5 bg-body rounded">
+    <div class="container shadow-lg p-3 mb-5 bg-body rounded table-responsive">
         <div class="form-pagamentos">
         <h2 class="mb-4">Formulário de Pagamento</h2>
 
         <form action="processa_formulario.php" method="POST">
-            <table class="table  table-bordered">
+            <table class="table table-bordered">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Dia</th>
@@ -118,8 +118,8 @@ $stmt->execute();
                             </div>
                         </td>
                         <td>
-                            <div class="col-15 f">
-                                <input type="checkbox" id="pgto" name="pgto">
+                            <div class="form-group">
+                                <input type="checkbox" class="form-check-input" id="pgto" name="pgto">
                             </div>
                         </td>
                         <td>
@@ -131,37 +131,108 @@ $stmt->execute();
                 </form>     
                 </div>
                 <div class="tabela-pagamentos">
-                    <?php
-                        if ($stmt->rowCount() > 0) {
-                            // Saída dos dados de cada linha
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                $classe = $row['pgto'] == "0" ? 'linha-pagamento-nao-realizado' : 'linha-pagamento-realizado';
-                                echo "<tr class='$classe'>";
-                                echo "<td>" . htmlspecialchars($row['dia']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['cfc']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['cd']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['comp']) . "</td>";
-                                echo "<td>R$" . htmlspecialchars($row['valor']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['local_pgto']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['cp']) . "</td>";
-                                echo "<td>" . ($row['pgto'] ? 'Sim' : 'Não') . "</td>"; // Exibe 'Sim' ou 'Não' para o checkbox
-                                echo '<td>
-                                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                                            <button type="button" class="btn btn-danger">Excluir</button>
-                                            <button type="button" class="btn btn-success">Editar</button>
+                <?php
+                    if ($stmt->rowCount() > 0) {
+                        // Saída dos dados de cada linha
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            $classe = $row['pgto'] == "0" ? 'linha-pagamento-nao-realizado' : 'linha-pagamento-realizado';
+                            echo "<tr class='$classe'>";
+                            echo "<td>" . htmlspecialchars($row['dia']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['cfc']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['cd']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['comp']) . "</td>";
+                            echo "<td>R$" . htmlspecialchars($row['valor']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['local_pgto']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['cp']) . "</td>";
+                            echo "<td><div class='form-group form-check'>" . ($row['pgto'] ? 'Sim' : 'Não') . "</div></td>"; // Exibe 'Sim' ou 'Não' para o checkbox
+                            echo "<td>
+                                    <div class='btn-group btn-group-sm' role='group' aria-label='Basic mixed styles example'>
+                                        <button type='button' class='btn btn-danger' onclick='excluirPagamento(" . htmlspecialchars($row['id']) . ")'>Excluir</button>
+                                        <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#Modaleditar" . htmlspecialchars($row['id']) . "'>Editar</button>
+                                    </div>
+                                </td>";
+                            echo "</tr>";
+                            ?>
+                            <div class="modal fade bd-example-modal-xl" id="Modaleditar<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="ModaleditarlLabel<?php echo $row['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-xl modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="Modaleditar">Detalhes do Pagamento</h5>
+                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fechar">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-1">
+                                                        <label for="editdia<?php echo $row['id']; ?>" class="col-form-label">Dia:</label>
+                                                        <input type="text" class="form-control" id="editdia<?php echo $row['id']; ?>" value="<?php echo $row['dia']; ?>">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <label for="editcfc<?php echo $row['id']; ?>" class="col-form-label">CFC:</label>
+                                                        <input type="text" class="form-control" id="editcfc<?php echo $row['id']; ?>" value="<?php echo $row['cfc']; ?>">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <label for="editcd<?php echo $row['id']; ?>" class="col-form-label">CD:</label>
+                                                        <input type="text" class="form-control" id="editcd<?php echo $row['id']; ?>" value="<?php echo $row['cd']; ?>">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="editdescricao<?php echo $row['id']; ?>" class="col-form-label">Descrição:</label>
+                                                        <input type="text" class="form-control" id="editdescricao<?php echo $row['id']; ?>" value="<?php echo $row['descricao']; ?>">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <label for="editcomp<?php echo $row['id']; ?>" class="col-form-label">COMP:</label>
+                                                        <input type="text" class="form-control" id="editcomp<?php echo $row['id']; ?>" value="<?php echo $row['comp']; ?>">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="editvalor<?php echo $row['id']; ?>" class="col-form-label">Valor:</label>
+                                                        <div class="input-group mb-3">
+                                                            <span class="input-group-text">R$</span>
+                                                            <input type="text" class="form-control" id="editvalor<?php echo $row['id']; ?>" aria-label="Amount (to the nearest dollar)" value="<?php echo $row['valor']; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="editlocalpgto<?php echo $row['id']; ?>" class="col-form-label">Local Pgto:</label>
+                                                        <input type="text" class="form-control" id="editlocalpgto<?php echo $row['id']; ?>" value="<?php echo $row['local_pgto']; ?>">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <label for="editcp<?php echo $row['id']; ?>" class="col-form-label">CP:</label>
+                                                        <input type="text" class="form-control" id="editcp<?php echo $row['id']; ?>" value="<?php echo $row['cp']; ?>">
+                                                    </div>
+                                                    <div class="col-md-1 form-check">
+                                                        <label for="editpago<?php echo $row['id']; ?>" class="col-form-label">Pago:</label>
+                                                        <!-- Checkbox com valor "1" quando marcado -->
+                                                        <input type="checkbox" class="form-check" id="editpago<?php echo $row['id']; ?>" name="editpago<?php echo $row['id']; ?>" value="1" <?php if ($row['pgto']){ echo 'checked';}else{ echo '';}; ?>>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                         </div>
-                                      </td>';
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='10'>Nenhum pagamento encontrado.</td></tr>";
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">Fechar</button>
+                                            <button type="button" class="btn btn-primary" onclick="salvarPagamento(<?php echo $row['id']; ?>)">Salvar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
                         }
-                    ?>
+                    } else {
+                        echo "<tr><td colspan='10'>Nenhum pagamento encontrado.</td></tr>";
+                    }
+                ?>
                 </tbody>
             </table>
         </div>
-    </div>
 
+        
+    </div>
+    
+    <?php include '../bootstrap_js.php'; ?>
+    <script src="script.js"></script>
 </body>
 </html>

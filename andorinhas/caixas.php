@@ -276,5 +276,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             newCellValor.innerHTML = '<input class="invisivel" type="text" name="valor[]" required>';
         }
     </script>
+    <?php include '../bootstrap_js.php'; ?>
 </body>
 </html>
