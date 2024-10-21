@@ -178,8 +178,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
         include 'navbar.php';
     ?>
-    <div class="container">
-        <div class="caixas">
+    <div class="container shadow-lg p-5 rounded">
+        <div class="caixas ">
             <form method="post">
                 <table id="despesasTable">
                     <tr>

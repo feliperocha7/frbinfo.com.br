@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_user = $_SESSION['user_id'];
 
     // Cria a data de lançamento com o formato desejado
-    $data_cadastro = date('d-m-Y H:i:s'); // Mudei o formato para compatibilidade com DATETIME
+    $data_cadastro = date('Y-m-d H:i:s'); // Mudei o formato para compatibilidade com DATETIME
 
     // Validação simples (vAdapterManager pode expandir conforme douche)
     if (empty($dia) || empty($comp) || empty($descricao) || empty($valor) || empty($banco) || empty($cod) || empty($id_loja) || empty($id_user)) {

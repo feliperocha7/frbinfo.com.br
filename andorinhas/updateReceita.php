@@ -12,7 +12,7 @@
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Receber todos os campos enviados
-    $id_receita = $data['id_receita'] ?? null;
+    $id_receita = $data['receita_id'] ?? null;
     $dia = $data['dia'] ?? null;
     $descricao = $data['descricao'] ?? null;
     $comp = $data['comp'] ?? null;
@@ -24,7 +24,10 @@
     $data_update = date('Y-m-d H:i:s');
 
     // Validar se todos os campos obrigatórios foram enviados corretamente
-    if (!$dia) {
+    if (!$id_receita) {
+        echo json_encode(["success" => false, "message" => "ID não fornecido corretamente."]);
+        exit;
+    }else if (!$dia) {
         echo json_encode(["success" => false, "message" => "Dia não fornecido corretamente."]);
         exit;
     } else if (!$comp) {
@@ -45,9 +48,9 @@
     }
 
     // Deletar o pagamento do banco de dados (ajuste na query)
-    $query = "UPDATE receitas SET dia = :dia, comp = :comp, descricao = :descricao, valor = :valor, banco = :banco, cod = :cod, id_loja :id_loja, id_user = :id_user, data_update = :data_update WHERE id = :id_receita";
+    $query = "UPDATE receitas SET dia = :dia, comp = :comp, descricao = :descricao, valor = :valor, banco = :banco, cod = :cod, id_loja = :id_loja, id_user = :id_user, data_update = :data_update WHERE id = :id_receita";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id_receita', $pgtoId);
+    $stmt->bindParam(':id_receita', $id_receita);
     $stmt->bindParam(':dia', $dia); 
     $stmt->bindParam(':descricao', $descricao);
     $stmt->bindParam(':comp', $comp);

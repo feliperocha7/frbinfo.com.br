@@ -11,9 +11,29 @@ document.addEventListener("DOMContentLoaded", function () {
         const cp = document.getElementById(`editcp${pgtoId}`).value;
         const pago = document.getElementById(`editpago${pgtoId}`).checked ? 1 : 0; // Captura o valor correto do checkbox
     
-        // Verificação se todos os campos foram preenchidos
-        if (!dia || !cfc || !cd || !descricao || !comp || !valor || !local_pgto || !cp) {
-            alert("Por favor, preencha todos os campos obrigatórios!");
+        // Verificação se algum campo foi alterado
+        const originalDia = document.getElementById(`editdia${pgtoId}`).getAttribute('data-original');
+        const originalCfc = document.getElementById(`editcfc${pgtoId}`).getAttribute('data-original');
+        const originalCd = document.getElementById(`editcd${pgtoId}`).getAttribute('data-original');
+        const originalDescricao = document.getElementById(`editdescricao${pgtoId}`).getAttribute('data-original');
+        const originalComp = document.getElementById(`editcomp${pgtoId}`).getAttribute('data-original');
+        const originalValor = document.getElementById(`editvalor${pgtoId}`).getAttribute('data-original');
+        const originalLocalPgto = document.getElementById(`editlocalpgto${pgtoId}`).getAttribute('data-original');
+        const originalCp = document.getElementById(`editcp${pgtoId}`).getAttribute('data-original');
+        const originalPago = document.getElementById(`editpago${pgtoId}`).getAttribute('data-original');
+    
+        if (
+            dia === originalDia && 
+            cfc === originalCfc && 
+            cd === originalCd && 
+            descricao === originalDescricao && 
+            comp === originalComp && 
+            valor === originalValor && 
+            local_pgto === originalLocalPgto && 
+            cp === originalCp && 
+            pago.toString() === originalPago
+        ) {
+            alert("Nenhuma alteração foi feita.");
             return;
         }
     
@@ -54,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     
+    
     window.salvarPagamento = salvarPagamento;
 
     function excluirPagamento(pgtoId) {
@@ -83,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     ///RECEITAS///
     function salvarReceita(id_receita) {
+        // Obtém os valores atuais dos campos do formulário
         const dia = document.getElementById(`editdiaR${id_receita}`).value;
         const comp = document.getElementById(`editcompR${id_receita}`).value;
         const descricao = document.getElementById(`editdescricaoR${id_receita}`).value;
@@ -91,15 +113,31 @@ document.addEventListener("DOMContentLoaded", function () {
         const cod = document.getElementById(`editcodR${id_receita}`).value;
         const loja = document.getElementById(`editlojaR${id_receita}`).value;
     
+        // Obtém os valores originais para comparação (por exemplo, você pode armazená-los no HTML com `data-*` attributes)
+        const originalDia = document.getElementById(`editdiaR${id_receita}`).getAttribute('data-original');
+        const originalComp = document.getElementById(`editcompR${id_receita}`).getAttribute('data-original');
+        const originalDescricao = document.getElementById(`editdescricaoR${id_receita}`).getAttribute('data-original');
+        const originalValor = document.getElementById(`editvalorR${id_receita}`).getAttribute('data-original');
+        const originalBanco = document.getElementById(`editbancoR${id_receita}`).getAttribute('data-original');
+        const originalCod = document.getElementById(`editcodR${id_receita}`).getAttribute('data-original');
+        const originalLoja = document.getElementById(`editlojaR${id_receita}`).getAttribute('data-original');
+    
         // Verificação se todos os campos foram preenchidos
-        if (!dia || !comp || !valor || !banco || !cod || !loja) {
+        if (!dia || !descricao || !comp || !valor || !banco || !cod || !loja) {
             alert("Por favor, preencha todos os campos obrigatórios!");
+            return;
+        }
+    
+        // Verificar se algum valor foi modificado
+        if (dia === originalDia && comp === originalComp && descricao === originalDescricao &&
+            valor === originalValor && banco === originalBanco && cod === originalCod && loja === originalLoja) {
+            alert("Nenhuma alteração foi feita.");
             return;
         }
     
         // Criação do objeto JSON para envio
         const data = {
-            id_receita: id_receita,
+            receita_id: id_receita,
             dia: dia,
             comp: comp,
             descricao: descricao,
@@ -113,23 +151,29 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch('updateReceita.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Importante definir como JSON
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data) // Envia os dados no formato JSON
-        }).then(response => {
+            body: JSON.stringify(data)
+        })
+        .then(response => {
             if (!response.ok) {
-                throw new Error("Erro ao editar o receita: " + response.statusText);
+                throw new Error("Erro ao editar a receita: " + response.statusText);
             }
             return response.json();
-        }).then(data => {
+        })
+        .then(data => {
             if (data.success) {
-                alert("Receita editado com sucesso!");
+                alert("Receita editada com sucesso!");
                 window.location.reload();
             } else {
-                alert("Erro ao editar o receita: " + data.message);
+                alert("Erro ao editar a receita: " + data.message);
             }
+        })
+        .catch(error => {
+            alert("Ocorreu um erro: " + error.message);
         });
     }
+    
     window.salvarReceita = salvarReceita;
 
 
@@ -143,20 +187,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({ id_receita: id_receita })
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error("Erro ao excluir o receita: " + response.statusText);
+                    throw new Error("Erro ao excluir a receita: " + response.statusText);
                 }
                 return response.json();
             }).then(data => {
                 if (data.success) {
-                    alert("Receita excluído com sucesso!");
+                    alert("Receita excluída com sucesso!");
                     window.location.reload();
                 } else {
-                    alert("Erro ao excluir o receita: " + data.message);
+                    alert("Erro ao excluir a receita: " + data.message);
                 }
             });
         }
     }
-    window.excluirPagamento = excluirReceita;
+    window.excluirReceita = excluirReceita;
 
 
 });

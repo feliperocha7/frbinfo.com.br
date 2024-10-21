@@ -16,6 +16,12 @@ class Auth {
 
     public function login($username, $password) {
         try {
+            if (empty($username) || empty($password)) {
+                error_log("Login falhou: nome de usuário ou senha vazios.");
+                echo "Por favor, preencha todos os campos.";
+                return false;
+            }
+
             $query = "SELECT * FROM usuarios WHERE usuario = :username AND ativo = 1";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':username', $username);
@@ -38,69 +44,86 @@ class Auth {
                     $updateStmt = $this->conn->prepare($updateQuery);
                     $updateStmt->bindParam(':session_id', $_SESSION['session_id']);
                     $updateStmt->bindParam(':user_id', $_SESSION['user_id']);
-                    $updateStmt->execute();
-
-                    return true;
+                    if ($updateStmt->execute()) {
+                        return true;
+                    } else {
+                        error_log("Erro ao atualizar o ID da sessão no banco de dados.");
+                        echo "Erro interno. Tente novamente mais tarde.";
+                        return false;
+                    }
                 } else {
-                    error_log("Senha incorreta.");
+                    error_log("Senha incorreta para o usuário: $username.");
                     echo "Senha incorreta!";
                     return false;
                 }
             } else {
-                error_log("Usuário não encontrado ou inativo.");
+                error_log("Usuário não encontrado ou inativo: $username.");
                 echo "Usuário não encontrado ou inativo!";
                 return false;
             }
         } catch (PDOException $exception) {
             error_log("Erro de banco de dados: " . $exception->getMessage());
+            echo "Erro de conexão com o banco de dados.";
             return false;
         }
     }
 
     public function checkSession() {
-        // Verifica se a sessão está ativa
-        if (!isset($_SESSION['user'])) {
-            error_log("Sessão não definida.");
-            header("Location: /frbinfo.com.br/login.php");
-            exit();
-        }
+        try {
+            // Verifica se a sessão está ativa
+            if (!isset($_SESSION['user'])) {
+                error_log("Tentativa de acesso sem sessão ativa.");
+                header("Location: /frbinfo.com.br/login.php");
+                exit();
+            }
 
-        // Verifica se o tempo de inatividade excede o limite
-        if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > self::SESSION_TIMEOUT)) {
-            error_log("Sessão expirada devido à inatividade.");
-            $this->logout(); // Encerra a sessão
-        }
-        
-        // Atualiza o timestamp da última atividade
-        $_SESSION['last_activity'] = time();
-        
-        // Verifica se o ID da sessão armazenado no banco de dados corresponde ao ID atual
-        $query = "SELECT session_id FROM usuarios WHERE id = :user_id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_id', $_SESSION['user_id']);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Verifica se o tempo de inatividade excede o limite
+            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > self::SESSION_TIMEOUT)) {
+                error_log("Sessão expirada devido à inatividade.");
+                $this->logout(); // Encerra a sessão
+            }
 
-        if ($user === false) {
-            error_log("Usuário não encontrado no banco de dados.");
+            // Atualiza o timestamp da última atividade
+            $_SESSION['last_activity'] = time();
+            
+            // Verifica se o ID da sessão armazenado no banco de dados corresponde ao ID atual
+            $query = "SELECT session_id FROM usuarios WHERE id = :user_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $_SESSION['user_id']);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user === false) {
+                error_log("Usuário não encontrado no banco de dados.");
+                echo "Erro interno. Tente novamente mais tarde.";
+                $this->logout();
+            } elseif ($user['session_id'] !== session_id()) {
+                error_log("ID da sessão não corresponde para o usuário: " . $_SESSION['user']);
+                echo "Sessão inválida. Faça login novamente.";
+                $this->logout();
+            } else {
+                error_log("Sessão válida para o usuário: " . $_SESSION['user']);
+                return true;
+            }
+
+            return false;
+        } catch (PDOException $exception) {
+            error_log("Erro de banco de dados durante a verificação da sessão: " . $exception->getMessage());
+            echo "Erro de conexão com o banco de dados.";
             $this->logout();
-        } elseif ($user['session_id'] !== session_id()) {
-            error_log("ID da sessão não corresponde.");
-            $this->logout();
-        } else {
-            error_log("Sessão válida para o usuário: " . $_SESSION['user']);
-            return true;
         }
-
-        return false;
     }
 
     public function logout() {
-        // Limpa o ID da sessão no banco de dados
-        $query = "UPDATE usuarios SET session_id = NULL WHERE id = :user_id";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_id', $_SESSION['user_id']);
-        $stmt->execute();
+        try {
+            // Limpa o ID da sessão no banco de dados
+            $query = "UPDATE usuarios SET session_id = NULL WHERE id = :user_id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':user_id', $_SESSION['user_id']);
+            $stmt->execute();
+        } catch (PDOException $exception) {
+            error_log("Erro ao limpar o ID da sessão durante o logout: " . $exception->getMessage());
+        }
 
         session_unset();
         session_destroy();

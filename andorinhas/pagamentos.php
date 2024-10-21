@@ -104,7 +104,7 @@ $stmt->execute();
                         <td>
                             <div class="input-group mb-3 f">
                                 <span class="input-group-text">R$</span>
-                                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" id="valor" name="valor" required>
+                                <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" id="valor" name="valor" step='0.01' required>
                             </div>
                         </td>
                         <td>
@@ -114,7 +114,7 @@ $stmt->execute();
                         </td>
                         <td>
                             <div class="col-15 f">
-                                <input type="number" class="form-control" id="cp" name="cp" max="999" min="0" required>
+                                <input type="number" class="form-control" id="cp" name="cp" max="100" min="0" required>
                             </div>
                         </td>
                         <td>
@@ -155,65 +155,64 @@ $stmt->execute();
                             echo "</tr>";
                             ?>
                             <div class="modal fade bd-example-modal-xl" id="Modaleditar<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="ModaleditarlLabel<?php echo $row['id']; ?>" aria-hidden="true">
-                                <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-dialog modal-xl mod'al-dialog-centered">
                                     <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="Modaleditar">Detalhes do Pagamento</h5>
-                                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-md-1">
-                                                        <label for="editdia<?php echo $row['id']; ?>" class="col-form-label">Dia:</label>
-                                                        <input type="text" class="form-control" id="editdia<?php echo $row['id']; ?>" value="<?php echo $row['dia']; ?>">
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <label for="editcfc<?php echo $row['id']; ?>" class="col-form-label">CFC:</label>
-                                                        <input type="text" class="form-control" id="editcfc<?php echo $row['id']; ?>" value="<?php echo $row['cfc']; ?>">
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <label for="editcd<?php echo $row['id']; ?>" class="col-form-label">CD:</label>
-                                                        <input type="text" class="form-control" id="editcd<?php echo $row['id']; ?>" value="<?php echo $row['cd']; ?>">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="editdescricao<?php echo $row['id']; ?>" class="col-form-label">Descrição:</label>
-                                                        <input type="text" class="form-control" id="editdescricao<?php echo $row['id']; ?>" value="<?php echo $row['descricao']; ?>">
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <label for="editcomp<?php echo $row['id']; ?>" class="col-form-label">COMP:</label>
-                                                        <input type="text" class="form-control" id="editcomp<?php echo $row['id']; ?>" value="<?php echo $row['comp']; ?>">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <label for="editvalor<?php echo $row['id']; ?>" class="col-form-label">Valor:</label>
-                                                        <div class="input-group mb-3">
-                                                            <span class="input-group-text">R$</span>
-                                                            <input type="text" class="form-control" id="editvalor<?php echo $row['id']; ?>" aria-label="Amount (to the nearest dollar)" value="<?php echo $row['valor']; ?>">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="Modaleditar">Detalhes do Pagamento</h5>
+                                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fechar">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <label for="editdia<?php echo $row['id']; ?>" class="col-form-label">Dia:</label>
+                                                            <input type="text" class="form-control" id="editdia<?php echo $row['id']; ?>" value="<?php echo $row['dia']; ?>" data-original="<?php echo $row['dia']; ?>">
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label for="editcfc<?php echo $row['id']; ?>" class="col-form-label">CFC:</label>
+                                                            <input type="text" class="form-control" id="editcfc<?php echo $row['id']; ?>" value="<?php echo $row['cfc']; ?>" data-original="<?php echo $row['cfc']; ?>">
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label for="editcd<?php echo $row['id']; ?>" class="col-form-label">CD:</label>
+                                                            <input type="text" class="form-control" id="editcd<?php echo $row['id']; ?>" value="<?php echo $row['cd']; ?>" data-original="<?php echo $row['cd']; ?>">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label for="editdescricao<?php echo $row['id']; ?>" class="col-form-label">Descrição:</label>
+                                                            <input type="text" class="form-control" id="editdescricao<?php echo $row['id']; ?>" value="<?php echo $row['descricao']; ?>" data-original="<?php echo $row['descricao']; ?>">
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label for="editcomp<?php echo $row['id']; ?>" class="col-form-label">COMP:</label>
+                                                            <input type="text" class="form-control" id="editcomp<?php echo $row['id']; ?>" value="<?php echo $row['comp']; ?>" data-original="<?php echo $row['comp']; ?>">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label for="editvalor<?php echo $row['id']; ?>" class="col-form-label">Valor:</label>
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text">R$</span>
+                                                                <input type="text" class="form-control" id="editvalor<?php echo $row['id']; ?>" value="<?php echo $row['valor']; ?>" data-original="<?php echo $row['valor']; ?>" step='0.01'>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label for="editlocalpgto<?php echo $row['id']; ?>" class="col-form-label">Local Pgto:</label>
+                                                            <input type="text" class="form-control" id="editlocalpgto<?php echo $row['id']; ?>" value="<?php echo $row['local_pgto']; ?>" data-original="<?php echo $row['local_pgto']; ?>">
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <label for="editcp<?php echo $row['id']; ?>" class="col-form-label">CP:</label>
+                                                            <input type="text" class="form-control" id="editcp<?php echo $row['id']; ?>" value="<?php echo $row['cp']; ?>" data-original="<?php echo $row['cp']; ?>">
+                                                        </div>
+                                                        <div class="col-md-1 form-check">
+                                                            <label for="editpago<?php echo $row['id']; ?>" class="col-form-label">Pago:</label>
+                                                            <!-- Checkbox com valor "1" quando marcado -->
+                                                            <input type="checkbox" class="form-check" id="editpago<?php echo $row['id']; ?>" name="editpago<?php echo $row['id']; ?>" value="1" <?php if ($row['pgto']){ echo 'checked';}else{ echo '';}; ?> data-original="<?php echo $row['pgto'] ? 1 : 0; ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2">
-                                                        <label for="editlocalpgto<?php echo $row['id']; ?>" class="col-form-label">Local Pgto:</label>
-                                                        <input type="text" class="form-control" id="editlocalpgto<?php echo $row['id']; ?>" value="<?php echo $row['local_pgto']; ?>">
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <label for="editcp<?php echo $row['id']; ?>" class="col-form-label">CP:</label>
-                                                        <input type="text" class="form-control" id="editcp<?php echo $row['id']; ?>" value="<?php echo $row['cp']; ?>">
-                                                    </div>
-                                                    <div class="col-md-1 form-check">
-                                                        <label for="editpago<?php echo $row['id']; ?>" class="col-form-label">Pago:</label>
-                                                        <!-- Checkbox com valor "1" quando marcado -->
-                                                        <input type="checkbox" class="form-check" id="editpago<?php echo $row['id']; ?>" name="editpago<?php echo $row['id']; ?>" value="1" <?php if ($row['pgto']){ echo 'checked';}else{ echo '';}; ?>>
-
-                                                    </div>
                                                 </div>
-                                            </div>
-                                        </form>
+                                            </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">Fechar</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                             <button type="button" class="btn btn-primary" onclick="salvarPagamento(<?php echo $row['id']; ?>)">Salvar</button>
                                         </div>
                                     </div>
